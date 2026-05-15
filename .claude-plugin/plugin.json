@@ -1,0 +1,19 @@
+{
+  "name": "ddd",
+  "version": "0.1.0",
+  "description": "Domain-Driven Design as a guardrail skill. Loads automatically when the conversation touches domain modeling, bounded contexts, aggregates, entities, value objects, context mapping, or any non-trivial business-logic design — and pushes back on misapplied patterns and fuzzy terminology.",
+  "homepage": "https://github.com/Superheld/cc-plugin-ddd",
+  "repository": "https://github.com/Superheld/cc-plugin-ddd",
+  "keywords": [
+    "ddd",
+    "domain-driven-design",
+    "architecture",
+    "modeling",
+    "bounded-context",
+    "skill"
+  ],
+  "author": {
+    "name": "Roland"
+  },
+  "license": "MIT"
+}
