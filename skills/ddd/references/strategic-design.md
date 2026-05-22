@@ -66,6 +66,33 @@ The choice depends on three questions:
 - Few, ad-hoc → bilateral translation (Anticorruption Layer on each consumer)
 - Many → **Open-host Service**, often with **Published Language**
 
+### Quick-reference decision tree
+
+When the situation maps to the simple case, this collapses Q1-Q3 into a single walk:
+
+```
+Do the two contexts need to talk at all?
+├── No  → Separate Ways
+└── Yes →
+    Is the dependency mutual?
+    ├── Yes →
+    │   Is the shared piece small and stable?
+    │   ├── Yes → Shared Kernel
+    │   └── No  → Partnership
+    └── No (one is clearly upstream, the other downstream) →
+        Can the downstream team negotiate with the upstream?
+        ├── Yes → Customer/Supplier Development Teams
+        └── No  →
+            Does the downstream have many peers consuming the same upstream?
+            ├── Yes → ask the upstream for an Open-host Service / Published Language
+            └── No  →
+                Is the upstream's model acceptable as the downstream's?
+                ├── Yes → Conformist
+                └── No  → Anticorruption Layer
+```
+
+This is a starting heuristic, not a rule. Real systems combine patterns — e.g. an Open-host Service speaking a Published Language, with one downstream as Conformist (because the language fits its model) and another with an Anticorruption Layer (because it does not). When the tree gives an answer that feels wrong, return to the Q1-Q3 questions above and check which assumption broke.
+
 ### Anti-patterns in context mapping
 
 - **Pretending no map exists**: every integration that crosses a context is governed by *some* relationship, named or unnamed. Unnamed relationships drift toward Big Ball of Mud.
