@@ -61,19 +61,21 @@ Patterns marked with `*` were introduced after the 2004 book.
 
 **Problem:** When UI, database, and infrastructure code mix with business logic, the domain becomes impossible to reason about.
 
-**Therefore:** Isolate the domain model from infrastructure, UI, and even application logic. Partition into layers. Each layer depends only on layers below. Concentrate domain-model code in one layer. Hexagonal Architecture or similar patterns serve the same goal — the key is isolation.
+**Therefore:** Develop a design within each layer that is cohesive and that depends only on layers below. Follow standard architectural patterns to provide loose coupling to the layers above. Concentrate all the code related to the domain model in one layer and isolate it from the user interface, application, and infrastructure code.
+
+**Note:** Hexagonal Architecture (Ports & Adapters) serves the same goal — the domain at the centre, technology adapters at the edges. The choice between classical Layered and Hexagonal is about how dependencies are organised; both achieve the DDD-essential isolation.
 
 ### Entities (a.k.a. Reference Objects)
 
 **Problem:** Some objects are defined by a thread of identity through time, not by their attributes. Mistaken identity corrupts data.
 
-**Therefore:** When an object is distinguished by identity rather than attributes, make identity primary to its definition. Keep the class focused on lifecycle continuity and identity. Define a means of distinguishing each object regardless of form or history — usually a unique symbol. The model must define what it means to be the same thing.
+**Therefore:** When an object is distinguished by its identity, rather than its attributes, make this primary to its definition in the model. Keep the class definition simple and focused on life cycle continuity and identity. Define a means of distinguishing each object regardless of its form or history. Be alert to requirements that call for matching objects by attributes. Define an operation that is guaranteed to produce a unique result for each object, possibly by attaching a symbol that is guaranteed unique. This means of identification may come from the outside, or it may be an arbitrary identifier created by and for the system, but it must correspond to the identity distinctions in the model. The model must define what it means to be the same thing.
 
 ### Value Objects
 
 **Problem:** Many objects have no conceptual identity. Forcing identity on them adds work and muddles the model.
 
-**Therefore:** When you care only about attributes and logic, classify it as a Value Object. Treat it as immutable. All operations should be Side-Effect-Free Functions. Give it no identity. Avoid the design complexity necessary to maintain Entities.
+**Therefore:** When you care only about the attributes and logic of an element of the model, classify it as a Value Object. Make it express the meaning of the attributes it conveys and give it related functionality. Treat the Value Object as immutable. Don't give it any identity. All operations should be Side-Effect-Free Functions. Avoid the design complexities necessary to maintain Entities.
 
 ### Domain Events *
 
@@ -85,35 +87,37 @@ Patterns marked with `*` were introduced after the 2004 book.
 
 **Problem:** Some domain concepts are not naturally things. Forcing them onto an Entity or Value distorts both.
 
-**Therefore:** When a significant process or transformation is not a natural responsibility of an Entity or Value Object, add it to the model as a standalone interface declared as a Service. Define a service contract (a set of assertions). State them in the ubiquitous language of the bounded context. The service name is part of the ubiquitous language.
+**Therefore:** When a significant process or transformation in the domain is not a natural responsibility of an Entity or Value Object, add an operation to the model as a standalone interface declared as a Service. Define the interface in terms of the language of the model and make sure the operation name is part of the Ubiquitous Language. Make the Service stateless.
+
+**Note:** The Service contract is a set of assertions about its behaviour (post-conditions and invariants on the model). State them in the Ubiquitous Language of the Bounded Context.
 
 ### Modules (a.k.a. Packages)
 
 **Problem:** Modules are usually treated as a technical concern, not a modelling concern. Coupling and cohesion are reduced to mechanical metrics.
 
-**Therefore:** Choose modules that tell the story of the system and contain a cohesive set of concepts. Give modules names that become part of the ubiquitous language. Modules are part of the model. If coupling stays high after refactoring, look for an overlooked concept that would unify or separate the elements.
+**Therefore:** Choose Modules that tell the story of the system and contain a cohesive set of concepts. Seek low coupling in the sense of concepts that can be understood and reasoned about independently of each other. Give the Modules names that become part of the Ubiquitous Language. Modules and their names should reflect insight into the domain.
+
+**Note:** If coupling stays high after refactoring, look for an overlooked concept that would unify or separate the elements. Modules and the model coevolve.
 
 ### Aggregates
 
 **Problem:** Guaranteeing consistency across complex object associations is hard. Locking schemes cause contention; distributed objects fragment.
 
-**Therefore:** Cluster Entities and Value Objects into Aggregates and define boundaries around each. Choose one Entity as the root. External objects hold references to the root only (internal references may be passed for use within a single operation). Define invariants for the aggregate and enforce them at the root.
+**Therefore:** Cluster the Entities and Value Objects into Aggregates and define boundaries around each. Choose one Entity to be the root of each Aggregate, and control all access to the objects inside the boundary through the root. Allow external objects to hold references to the root only. Transient references to internal members can be passed out for use within a single operation only. Because the root controls access, it cannot be blindsided by changes to the internals.
 
-Use the same boundaries to govern transactions and distribution. Within an aggregate, consistency is synchronous. Across aggregates, asynchronous. Keep an aggregate together on one server.
-
-When boundaries don't work for transactions or distribution, reconsider the model — the friction often reveals an important domain insight.
+**Application notes:** Use the same boundaries to govern transactions and distribution. Within an aggregate, consistency is synchronous. Across aggregates, asynchronous. Keep an aggregate together on one server. When boundaries don't work for transactions or distribution, reconsider the model — the friction often reveals an important domain insight.
 
 ### Repositories
 
 **Problem:** Queries scattered everywhere muddle the model. Database access infrastructure overwhelms client code. Unconstrained queries breach aggregate encapsulation.
 
-**Therefore:** For each Aggregate type that needs global access, create a Repository providing the illusion of an in-memory collection of all instances of the root type. Provide add/remove methods and selection methods using criteria meaningful to domain experts. Return fully instantiated aggregates (or lazy proxies). Provide Repositories only for Aggregate Roots that need direct access.
+**Therefore:** For each type of object that needs global access, create an object that can provide the illusion of an in-memory collection of all objects of that type. Set up access through a well-known global interface. Provide methods to add and remove objects, which will encapsulate the actual insertion or removal of data in the data store. Provide methods that select objects based on some criteria and return fully instantiated objects or collections of objects whose attribute values meet the criteria. Provide Repositories only for Aggregate roots that actually need direct access. Keep the client focused on the model, delegating all object storage and access to the Repositories.
 
 ### Factories
 
 **Problem:** Constructing a complex Aggregate or Value Object reveals too much internal structure. Putting construction logic on the constructed object distorts its design.
 
-**Therefore:** Shift responsibility for creating complex instances to a separate Factory object. The Factory may have no domain responsibility but is still part of the domain design. Provide an interface that hides assembly. Create an entire Aggregate as a piece, enforcing invariants from the start.
+**Therefore:** Shift the responsibility for creating instances of complex objects and Aggregates to a separate object, which may itself have no responsibility in the domain model but is still part of the domain design. Provide an interface that encapsulates all complex assembly and that does not require the client to reference the concrete classes of the objects being instantiated. Create entire Aggregates as a piece, enforcing their invariants.
 
 ---
 

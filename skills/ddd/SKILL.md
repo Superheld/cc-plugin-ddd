@@ -1,6 +1,6 @@
 ---
 name: ddd
-description: Apply Domain-Driven Design rigorously when designing software, modeling a domain, planning system architecture, writing specs, or refactoring toward deeper insight. Use this skill whenever the conversation touches domain modeling, bounded contexts, aggregates, entities, value objects, services, repositories, domain events, context mapping, or any system design that touches non-trivial business logic — even if "DDD" is not mentioned explicitly. The skill is a guardrail: it nails down terminology, enforces strategic-before-tactical thinking, and pushes back when patterns are misapplied or terms are used loosely. Always consult this skill before agreeing to a domain model, naming an aggregate, or proposing a service.
+description: 'Apply Domain-Driven Design rigorously when designing software, modeling a domain, planning system architecture, writing specs, or refactoring toward deeper insight. Use this skill whenever the conversation touches domain modeling, bounded contexts, aggregates, entities, value objects, services, repositories, domain events, context mapping, or any system design that touches non-trivial business logic — even if "DDD" is not mentioned explicitly. The skill is a guardrail: it nails down terminology, enforces strategic-before-tactical thinking, and pushes back when patterns are misapplied or terms are used loosely. Always consult this skill before agreeing to a domain model, naming an aggregate, or proposing a service.'
 ---
 
 # DDD
@@ -60,6 +60,7 @@ Load reference files only when needed. The SKILL.md alone is enough for orientin
 
 - **`references/glossary.md`** — Evans' core definitions (domain, model, ubiquitous language, context, bounded context, upstream/downstream, mutually dependent, free). Read this when grounding a term the user is using loosely.
 - **`references/patterns.md`** — Full pattern catalogue with Evans' "Therefore:" prescription for every pattern in the Reference. Read this when stating what a pattern actually says rather than paraphrasing from memory.
+- **`references/how-to-apply.md`** — Evans-centric practical guide: knowledge crunching, building the ubiquitous language, binding model to implementation, the strategic-before-tactical sequence. Read this when a user is starting a DDD effort or asking "where do I even begin?", or when they want a process model rather than a pattern.
 - **`references/strategic-design.md`** — How to apply Context Mapping, Distillation, and Large-scale Structure. Read this when working on bounded contexts, integration between teams or systems, or identifying the core domain.
 - **`references/building-blocks.md`** — How to apply tactical patterns (Entities, Value Objects, Aggregates, Services, Domain Events, Repositories, Factories, Modules, Layered Architecture) and Supple Design patterns (Intention-Revealing Interfaces, Side-Effect-Free Functions, Assertions, Closure of Operations, Conceptual Contours). Read this when working inside a single bounded context on tactical design.
 
